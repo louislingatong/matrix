@@ -90,7 +90,7 @@ module.exports = {
     // save the ticket
     await ticket.save();
 
-    eventEmitter.emit('sendVerifyEmailLink', user.email, ticket.token);
+    eventEmitter.emit('sendVerifyEmailLink', user.email, ticket.token, profile.firstName);
 
     // Generate access token
     const accessToken = generateAccessToken(user);
@@ -110,6 +110,9 @@ module.exports = {
     const user = await User.findOne({email: req.value.body.email});
     if (!user) { return res.status(400).send('Invalid email.'); }
 
+    // Find the profile specified in email
+    const profile = await Profile.findOne({user: user.id});
+
     // Generate ticket token
     const token = await randomstring.generate();
 
@@ -128,7 +131,7 @@ module.exports = {
     // save the ticket
     await ticket.save();
 
-    eventEmitter.emit('sendResetPasswordLink', user.email, ticket.token);
+    eventEmitter.emit('sendResetPasswordLink', user.email, ticket.token, profile.firstName);
 
     res.status(200).json({ message: 'Reset password link has been sent to you email.' });
   },
