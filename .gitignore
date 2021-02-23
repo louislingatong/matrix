@@ -1,9 +1,8 @@
 # dependencies
-/node_modules
+node_modules/
 
-.env
+client/.env
+server/.env
 
 .idea
 .vscode
-
-package-lock.json

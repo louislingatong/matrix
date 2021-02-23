@@ -1,9 +1,6 @@
 const express = require('express');
 const logger = require('morgan');
 const mongoose = require('mongoose');
-const dotenv = require('dotenv');
-
-dotenv.config();
 
 mongoose.connect(process.env.DB_CONNECT,
   { useNewUrlParser: true, useUnifiedTopology: true },
@@ -11,16 +8,13 @@ mongoose.connect(process.env.DB_CONNECT,
 
 const app = express();
 
-const users = require('./routes/userRoute');
-const auth = require('./routes/authRoute');
-
 // Middlewares
 app.use(express.json());
-app.use(logger('dev'));
+app.use(logger("dev"));
 
 // Routes
-app.use('/auth', auth);
-app.use('/users', users);
+app.use('/auth', require('./routes/authRoute'));
+app.use('/users', require('./routes/userRoute'));
 
 // Catch 404 Errors and forward then to error handler
 app.use((req, res, next) => {
@@ -31,7 +25,7 @@ app.use((req, res, next) => {
 
 // Error handler function
 app.use((err, req, res, next) => {
-  const error = app.get('env') === 'development' ? err : {};
+  const error = process.env.NODE_ENV === 'development' ? err : {};
   const status = err.status || 500;
 
   res.status(status).json({
@@ -43,6 +37,4 @@ app.use((err, req, res, next) => {
   console.error(error);
 });
 
-// Start the server
-const port = app.get('port') || 5000;
-app.listen(port, () => console.log(`Server is listening on port ${port}`));
+module.exports = app;
