@@ -11,6 +11,10 @@ const userSchema = new Schema({
     default: 1,
     required: true
   },
+  name: {
+    type: String,
+    required: true,
+  },
   username: {
     type: String,
     unique: true,
@@ -54,6 +58,8 @@ userSchema.pre('save', async function(next) {
 
     // Override hashed password to the password
     this.password = hashedPassword;
+
+
     next();
   } catch (err) {
     next(err);

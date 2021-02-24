@@ -1,1 +1,1 @@
-import 'bootstrap'; // requires to install jquery and popper.js
+// import 'bootstrap'; // requires to install jquery and popper.js

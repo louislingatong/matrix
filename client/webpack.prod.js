@@ -2,6 +2,7 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
 const { config, settings, srcFile } = require('./webpack.common');
 const { merge } = require('webpack-merge');
 
@@ -28,7 +29,8 @@ module.exports = merge(config, {
   },
   plugins: [
     new MiniCssExtractPlugin({ filename: '[name].[fullhash].css' }),
-    new CleanWebpackPlugin()
+    new CleanWebpackPlugin(),
+    new WebpackManifestPlugin()
   ],
   module: {
     rules: [

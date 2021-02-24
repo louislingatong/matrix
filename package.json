@@ -2,6 +2,7 @@
   "name": "matrix",
   "version": "1.0.0",
   "description": "",
+  "private": true,
   "main": "index.js",
   "scripts": {
     "server-dev": "npm start --prefix server",
@@ -11,6 +12,6 @@
   "dependencies": {
     "concurrently": "^6.0.0"
   },
-  "author": "",
+  "author": "Louis Lingatong",
   "license": "ISC"
 }

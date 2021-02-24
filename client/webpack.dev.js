@@ -22,7 +22,7 @@ module.exports = merge(config, {
       },
     ]
   },
-  devtool: 'eval-source-map',
+  devtool: 'eval-cheap-source-map',
   devServer: {
     contentBase: settings.distPath
   }

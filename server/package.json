@@ -1,13 +1,12 @@
 {
-  "name": "matrix",
+  "name": "server",
   "version": "1.0.0",
-  "description": "",
+  "description": "Backend",
+  "private": true,
   "main": "index.js",
   "scripts": {
     "start": "nodemon -r dotenv/config index.js"
   },
-  "author": "LingatongLC",
-  "license": "ISC",
   "dependencies": {
     "@hapi/joi": "^17.1.1",
     "bcryptjs": "^2.4.3",
@@ -28,5 +27,7 @@
   },
   "devDependencies": {
     "nodemon": "^2.0.7"
-  }
+  },
+  "author": "Louis Lingatong",
+  "license": "ISC"
 }

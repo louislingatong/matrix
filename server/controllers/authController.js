@@ -34,9 +34,13 @@ module.exports = {
     // Generate code
     const code = await generateCode();
 
+    // Name
+    const name = `${req.value.body.firstName} ${req.value.body.lastName}`
+
     // Create new user
     const user = new User({
-      code: code,
+      code,
+      name,
       username: req.value.body.username,
       email: req.value.body.email,
       password: req.value.body.password
@@ -90,7 +94,7 @@ module.exports = {
     // save the ticket
     await ticket.save();
 
-    eventEmitter.emit('sendVerifyEmailLink', user.email, ticket.token, profile.firstName);
+    eventEmitter.emit('sendVerifyEmailLink', user.name, user.email, ticket.token);
 
     // Generate access token
     const accessToken = generateAccessToken(user);
@@ -110,9 +114,6 @@ module.exports = {
     const user = await User.findOne({email: req.value.body.email});
     if (!user) { return res.status(400).send('Invalid email.'); }
 
-    // Find the profile specified in email
-    const profile = await Profile.findOne({user: user.id});
-
     // Generate ticket token
     const token = await randomstring.generate();
 
@@ -131,7 +132,7 @@ module.exports = {
     // save the ticket
     await ticket.save();
 
-    eventEmitter.emit('sendResetPasswordLink', user.email, ticket.token, profile.firstName);
+    eventEmitter.emit('sendResetPasswordLink', user.name, user.email, ticket.token);
 
     res.status(200).json({ message: 'Reset password link has been sent to you email.' });
   },

@@ -4,17 +4,17 @@ const { app, mail } = require('../config');
 
 const eventEmitter = new EventEmitter;
 
-eventEmitter.on('sendVerifyEmailLink', async (email, token, firstName) => {
+eventEmitter.on('sendVerifyEmailLink', async (name, email, token) => {
   const context = {
-    name: firstName,
+    name,
     verifyEmailLink: `${app.domain}/auth/email/verify/${token}`
   }
   await mailer.sendEmail(mail.fromAddress, email, 'Email Verification', 'verifyEmail', context);
 });
 
-eventEmitter.on('sendResetPasswordLink', async (email, token, firstName) => {
+eventEmitter.on('sendResetPasswordLink', async (name, email, token) => {
   const context = {
-    name: firstName,
+    name,
     resetPasswordLink: `${app.domain}/auth/password/reset/${token}`
   }
   await mailer.sendEmail(mail.fromAddress, email, 'Reset Password Notification', 'resetPassword', context);
