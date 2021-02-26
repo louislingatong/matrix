@@ -1,17 +1,24 @@
+const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const { config, settings, srcFile } = require('./webpack.common');
+const { config, settings } = require('./webpack.common');
 const { merge } = require('webpack-merge');
+
+const publicFile = (filename) => {
+  return path.join(settings.publicPath, filename)
+};
 
 module.exports = merge(config, {
   mode: 'development',
   output: {
+    filename: '[name].bundle.js',
     path: settings.distPath,
-    filename: '[name].bundle.js'
+    publicPath: '/',
   },
   plugins: [
     new HtmlWebpackPlugin({
+      favicon: publicFile('favicon.ico'),
       title: 'Matrix',
-      template: srcFile('assets/main.html')
+      template: publicFile('index.html')
     })
   ],
   module: {
@@ -24,6 +31,8 @@ module.exports = merge(config, {
   },
   devtool: 'eval-cheap-source-map',
   devServer: {
-    contentBase: settings.distPath
+    historyApiFallback: true,
+    contentBase: settings.distPath,
+    port: 3000
   }
 })

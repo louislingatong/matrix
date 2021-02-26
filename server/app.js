@@ -1,6 +1,7 @@
 const express = require('express');
 const logger = require('morgan');
 const mongoose = require('mongoose');
+const cors = require("cors");
 
 mongoose.connect(process.env.DB_CONNECT,
   { useNewUrlParser: true, useUnifiedTopology: true },
@@ -11,6 +12,12 @@ const app = express();
 // Middlewares
 app.use(express.json());
 app.use(logger("dev"));
+app.use(
+  cors({
+    origin: process.env.APP_DOMAIN,
+    credentials: true
+  })
+);
 
 // Routes
 app.use('/auth', require('./routes/authRoute'));

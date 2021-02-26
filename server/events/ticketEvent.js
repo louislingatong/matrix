@@ -15,7 +15,7 @@ eventEmitter.on('sendVerifyEmailLink', async (name, email, token) => {
 eventEmitter.on('sendResetPasswordLink', async (name, email, token) => {
   const context = {
     name,
-    resetPasswordLink: `${app.domain}/auth/password/reset/${token}`
+    resetPasswordLink: `${app.domain}/reset-password/${token}`
   }
   await mailer.sendEmail(mail.fromAddress, email, 'Reset Password Notification', 'resetPassword', context);
 });

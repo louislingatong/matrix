@@ -1,14 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import store from './app/store';
+import store from './app/store/store';
 import { Provider } from 'react-redux';
 import * as serviceWorker from './serviceWorker';
+import App from './app';
 import './assets/scss/main.scss';
 
 ReactDOM.render(
-  <Provider store={store}>
-    <h1>Hello World!</h1>
-  </Provider>,
+  <React.StrictMode>
+    <Provider store={store}>
+      <App/>
+    </Provider>
+  </React.StrictMode>,
   document.getElementById('root')
 );
 

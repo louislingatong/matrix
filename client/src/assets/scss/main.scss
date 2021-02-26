@@ -1,2 +1,11 @@
-$primary: teal;
 @import "~bootstrap/scss/bootstrap";
+
+.main-wrapper {
+  min-height: calc(100vh - 112px);
+}
+
+.fixed-header {
+  position: sticky;
+  top: 0;
+  z-index: 1040;
+}

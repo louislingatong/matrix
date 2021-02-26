@@ -4,6 +4,7 @@ const User = require('../models/User');
 const Profile = require('../models/Profile');
 const Ticket = require('../models/Ticket');
 const { auth } = require('../config');
+const { errorParse } = require('../helpers/errorHelper');
 
 const eventEmitter = require('../events/ticketEvent');
 
@@ -27,9 +28,13 @@ generateCode = async () => {
 
 module.exports = {
   register: async (req, res, next) => {
-    // Find the user specified in email
+    // Check email if already exist
     const emailExist = await User.findOne({email: req.value.body.email});
-    if (emailExist) { return res.status(400).send('Email already exist.'); }
+    if (emailExist) { return errorParse(res, 422, { email: 'Email is already exist.' }); }
+
+    // Check username if already exist
+    const usernameExist = await User.findOne({username: req.value.body.username});
+    if (usernameExist) { return errorParse(res, 422, { username: 'Username is already exist.' }); }
 
     // Generate code
     const code = await generateCode();
@@ -112,7 +117,7 @@ module.exports = {
   forgotPassword: async (req, res, next) => {
     // Find the user specified in email
     const user = await User.findOne({email: req.value.body.email});
-    if (!user) { return res.status(400).send('Invalid email.'); }
+    if (!user) { return errorParse(res, 422, { email: 'Email is invalid'}); }
 
     // Generate ticket token
     const token = await randomstring.generate();
@@ -140,11 +145,11 @@ module.exports = {
   resetPassword: async (req, res, next) => {
     // Find the ticket specified in token
     const ticket = await Ticket.findOne({ token: req.value.body.token }).populate('owner');
-    if (!ticket) { return res.status(400).send('Invalid token.'); }
+    if (!ticket) { return errorParse(res, 422, { token: 'Token is invalid'}); }
 
     // Check token if expired
     const expiredTicket = Date.now() > ticket.expireAt;
-    if (expiredTicket) { return res.status(400).send('Token is already expired.'); }
+    if (expiredTicket) { return errorParse(res, 422, { token: 'Token is already expired'}); }
 
     // Update Password
     ticket.owner.password = req.value.body.password;
@@ -159,11 +164,11 @@ module.exports = {
   verifyEmail: async (req, res, next) => {
     // Find the ticket specified in token
     const ticket = await Ticket.findOne({ token: req.params.token }).populate('owner');
-    if (!ticket) { return res.status(400).send('Invalid token.'); }
+    if (!ticket) { return errorParse(res, 400, 'Invalid token'); }
 
     // Check token if expired
     const expiredTicket = Date.now() > ticket.expireAt;
-    if (expiredTicket) { return res.status(400).send('Token is already expired.'); }
+    if (expiredTicket) { return errorParse(res, 400, 'Token is already expired'); }
 
     // Change user status to active
     ticket.owner.updateOne({ status: 'ACTIVE' });
