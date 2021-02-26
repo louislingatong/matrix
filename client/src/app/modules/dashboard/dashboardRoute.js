@@ -6,6 +6,6 @@ export default [
     path: '/',
     exact: true,
     auth: true,
-    component: lazy(() => import('./pages/Dashboard')),
+    component: lazy(() => import('./pages')),
   },
 ]

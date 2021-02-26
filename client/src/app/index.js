@@ -1,10 +1,7 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import Routes from './routes';
-import store from './store/store';
-import {authCheck} from './modules/auth/authSlice';
 
 function App() {
-  store.dispatch(authCheck());
   return <Routes/>
 }
 

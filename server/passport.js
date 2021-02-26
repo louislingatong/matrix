@@ -2,7 +2,7 @@ const passport = require('passport');
 const { ExtractJwt } = require('passport-jwt');
 const JwtStrategy = require('passport-jwt').Strategy;
 const LocalStrategy = require('passport-local').Strategy;
-const User = require('./models/User');
+const db = require('./models');
 const { auth } = require('./config');
 
 // JSON WEB TOKENS STRATEGY
@@ -12,7 +12,7 @@ passport.use(new JwtStrategy({
 }, async (payload, done) => {
   try {
     // Find the user specified in token
-    const user = await User.findOne({_id: payload.sub}).populate('leader');
+    const user = await db.User.findById(payload.sub);
 
     // If user doesn't exists, handle it
     if (!user) { return done(null, false); }
@@ -28,7 +28,7 @@ passport.use(new JwtStrategy({
 passport.use(new LocalStrategy(async (username, password, done) => {
   try {
     // Find the user specified in token
-    const user = await User.findOne({ username });
+    const user = await db.User.findOne({ username });
 
     // If user doesn't exists, handle it
     if (!user) { return done(null, false); }

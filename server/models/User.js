@@ -19,7 +19,11 @@ const autoPopulateMembers = function (next) {
   try {
     this.populate({
       path: 'members',
-      select: ['code', 'name'],
+      select: 'code name email',
+      populate: {
+        path: 'profile',
+        select: 'firstName lastName'
+      }
     });
     next();
   } catch (err) {
@@ -31,6 +35,7 @@ const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
   code: String,
+  group: String,
   level: {
     type: Number,
     default: 1,
@@ -55,6 +60,16 @@ const userSchema = new Schema({
     max: 20,
     required: true
   },
+  status: {
+    type: String,
+    enum: user.statuses,
+    default: 'PENDING',
+    required: true
+  },
+  profile: {
+    type: Schema.Types.ObjectId,
+    ref: 'profile'
+  },
   leader: {
     type: Schema.Types.ObjectId,
     ref: 'user'
@@ -62,13 +77,7 @@ const userSchema = new Schema({
   members: [{
     type: Schema.Types.ObjectId,
     ref: 'user'
-  }],
-  status: {
-    type: String,
-    enum: user.statuses,
-    default: 'PENDING',
-    required: true
-  }
+  }]
 }, {
   timestamps: {
     createdAt: 'createdAt',

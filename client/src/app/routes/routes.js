@@ -1,9 +1,11 @@
-import homeRoutes from '../modules/dashboard/dashboardRoutes';
+import dashboardRoute from '../modules/dashboard/dashboardRoute';
 import authRoutes from '../modules/auth/authRoutes';
+import userRoutes from '../modules/user/userRoutes';
 
 export default [
-  ...homeRoutes,
+  ...dashboardRoute,
   ...authRoutes,
+  ...userRoutes,
   {
     path: '*',
     notFound: true,

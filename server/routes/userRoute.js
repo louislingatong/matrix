@@ -2,7 +2,7 @@ const router = require('express-promise-router')();
 const passport = require('passport');
 const passportConf = require('../passport');
 const UserController = require('../controllers/userController');
-const { validateParam, validateBody, schemas } = require('../helpers/routeHelper');
+const { validateParam, schemas } = require('../helpers/routeHelper');
 
 const passportJWT = passport.authenticate('jwt', { session: false });
 

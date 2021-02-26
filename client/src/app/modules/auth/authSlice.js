@@ -1,7 +1,9 @@
 import {createSlice} from '@reduxjs/toolkit';
+import HTTP from '../../utils/Http';
 
 const initialState = {
   isAuthenticated: false,
+  me: {}
 };
 
 export const authSlice = createSlice({
@@ -11,18 +13,25 @@ export const authSlice = createSlice({
     authenticate: (state, action) => {
       state.isAuthenticated = action.payload;
     },
+    setMe: (state, action) => {
+      state.me = action.payload;
+    }
   }
 });
 
-export const {authenticate} = authSlice.actions;
+export const {authenticate, setMe} = authSlice.actions;
 
 export const authLogin = (token) => dispatch => {
   localStorage.setItem('auth_token', token)
+  HTTP.defaults.headers.common['Authorization'] = token;
   dispatch(authenticate(true));
 };
 
 export const authCheck = () => dispatch => {
-  dispatch(authenticate(!!localStorage.getItem('auth_token')))
+  if (!!localStorage.getItem('auth_token')) {
+    HTTP.defaults.headers.common['Authorization'] = localStorage.getItem('auth_token');
+    dispatch(authenticate(true));
+  }
 };
 
 export const authLogout = () => dispatch => {
@@ -31,5 +40,6 @@ export const authLogout = () => dispatch => {
 };
 
 export const loggedInStatus = state => state.auth.isAuthenticated;
+export const loggedInUser = state => state.auth.me;
 
 export default authSlice.reducer;

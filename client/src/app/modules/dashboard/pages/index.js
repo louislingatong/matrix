@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 
-function Dashboard() {
+function Index() {
   return (
     <div>
       <h1>DASHBOARD</h1>
@@ -8,4 +8,4 @@ function Dashboard() {
   )
 }
 
-export default Dashboard;
+export default Index;

@@ -1,9 +1,9 @@
 import Http from '../../utils/Http';
-import {authLogin, setMe} from './authSlice';
+import {authLogin} from './userSlice';
 import {setLoading} from '../../store/loaderSlice';
 
 /**
- * Login user
+ * Fetch all users
  *
  * @param params
  * @returns {function(*)}
@@ -91,30 +91,6 @@ export function forgotPassword(params) {
       Http.post('auth/forgot-password', params)
         .then((res) => {
           resolve(res.data);
-        })
-        .catch(err => {
-          reject(err);
-        })
-        .finally(() => {
-          setLoading(false);
-        })
-    })
-  }
-}
-
-/**
- * Profile
- *
- * @returns {function(*)}
- */
-export function me() {
-  return dispatch => {
-    setLoading(true);
-    return new Promise((resolve, reject) => {
-      Http.get('auth/me')
-        .then((res) => {
-          dispatch(setMe(res.data));
-          resolve(res);
         })
         .catch(err => {
           reject(err);
