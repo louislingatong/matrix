@@ -18,9 +18,9 @@ const transporter = nodemailer.createTransport(mailConfig);
 const handlebarsOptions = {
   viewEngine: {
     defaultLayout: 'main',
-    layoutsDir: './mail-templates/main-layout/'
+    layoutsDir: './templates/mail/main-layout/'
   },
-  viewPath: path.resolve('./mail-templates/'),
+  viewPath: path.resolve('./templates/mail'),
   extName: '.html',
 };
 

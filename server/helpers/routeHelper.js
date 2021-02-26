@@ -1,5 +1,5 @@
 const Joi = require('@hapi/joi');
-const { errorParse } = require('./errorHelper');
+const { parseError } = require('./errorHelper');
 
 module.exports = {
   validateParam: (schema, name) => {
@@ -7,7 +7,7 @@ module.exports = {
       const result = schema.validate({ param: req['params'][name]});
       if (result.error) {
         const message = result.error.details[0].message;
-        return errorParse(res, 400, message);
+        return parseError(res, 400, message);
       } else {
         if (!req.value) req.value = {};
         if (!req.value['params']) req.value['params'] = {};
@@ -23,7 +23,7 @@ module.exports = {
       if (result.error) {
          const name = result.error.details[0].context.label;
          const message = result.error.details[0].message;
-        return errorParse(res, 422, {[name]: message});
+        return parseError(res, 422, {[name]: message});
       } else {
         if (!req.value) req.value = {};
         if (!req.value['body']) req.value['body'] = {};
