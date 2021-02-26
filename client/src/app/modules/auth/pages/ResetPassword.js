@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {useDispatch} from 'react-redux';
 import {Alert, Card, Col, Container, Image, Row} from 'react-bootstrap';
+import _ from 'lodash';
 import logo from '../../../../assets/images/logo_b.png';
 import ResetPasswordForm from '../forms/ResetPasswordForm';
 import {resetPassword} from '../authService';
@@ -8,21 +9,29 @@ import {resetPassword} from '../authService';
 function ResetPassword() {
   const dispatch = useDispatch();
   const [error, setError] = useState({});
-  const [alertErrorMessage, setAlertErrorMessage] = useState('');
+  const [alertMessage, setAlertMessage] = useState({});
 
   const handleSubmitForm = (data) => {
-    dispatch(resetPassword(data)).catch(err => {
-      if (err.status === 422) {
-        setError(err.error);
-      } else {
-        setAlertErrorMessage(err.error)
-      }
-    });
+    dispatch(resetPassword(data))
+      .then(res => setAlertMessage({
+        type: 'success',
+        message: res.message
+      }))
+      .catch(err => {
+        if (err.status === 422) {
+          setError(err.error);
+        } else {
+          setAlertMessage({
+            type: 'danger',
+            message: err.error
+          });
+        }
+      });
   };
 
-  const handleCloseAlertErrorMessage = () => {
-    setAlertErrorMessage('');
-  }
+  const handleCloseAlertMessage = () => {
+    setAlertMessage({});
+  };
 
   return (
     <Container>
@@ -34,13 +43,13 @@ function ResetPassword() {
       <Row className="justify-content-center">
         <Col xs={12} sm={12} md={5}>
           <Card>
-            {
-              !!alertErrorMessage &&
-              <Alert variant="danger" onClose={handleCloseAlertErrorMessage} dismissible>
-                {alertErrorMessage}
-              </Alert>
-            }
             <Card.Body>
+              {
+                !_.isEmpty(alertMessage) &&
+                <Alert variant={alertMessage.type} onClose={handleCloseAlertMessage} dismissible>
+                  {alertMessage.message}
+                </Alert>
+              }
               <ResetPasswordForm handleSubmitForm={handleSubmitForm} error={error}/>
             </Card.Body>
           </Card>

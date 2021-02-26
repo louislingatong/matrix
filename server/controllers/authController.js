@@ -5,6 +5,7 @@ const Profile = require('../models/Profile');
 const Ticket = require('../models/Ticket');
 const { auth } = require('../config');
 const { responseError } = require('../helpers/errorHelper');
+const { app } = require('../config')
 
 const eventEmitter = require('../events/ticketEvent');
 
@@ -36,10 +37,29 @@ module.exports = {
     const usernameExist = await User.findOne({username: req.body.username});
     if (usernameExist) { return responseError(res, 422, { username: 'Username is already exist.' }); }
 
+    // Find the leader specified in code
+    const leader = await User.findOne({code: req.body.code});
+
+    // Disallow user registration if already in maximum number of members
+    // Disallow user registration if already in maximum level
+    // If leader exists, handle it
+    if (leader) {
+      // Count leader members
+      const membersCount = await User.countDocuments({ leader });
+      // Check if leader members is already in maximum number of members
+      if (membersCount >= app.maxMembers) {
+        return responseError(res, 400, `Code ${leader.code} is already in maximum of ${app.maxMembers} members`);
+      }
+      // Check if leader level is already in maximum level
+      if (leader.level >= app.maxLevel) {
+        return responseError(res, 400, `User level is limited only for ${app.maxLevel} levels`);
+      }
+    }
+
     // Generate code
     const code = await generateCode();
 
-    // Name
+    // Construct a user name
     const name = `${req.body.firstName} ${req.body.lastName}`
 
     // Create new user
@@ -51,10 +71,7 @@ module.exports = {
       password: req.body.password
     });
 
-    // Find the leader specified in code
-    const leader = await User.findOne({code: req.body.code});
-
-    // If leader doesn't exists, handle it
+    // If leader exists, handle it
     if (leader) {
       // Assign a leader to new user
       user.leader = leader;
@@ -139,7 +156,7 @@ module.exports = {
 
     eventEmitter.emit('sendResetPasswordLink', user.name, user.email, ticket.token);
 
-    res.status(200).json({ message: 'Reset password link has been sent to you email.' });
+    res.status(200).json({ message: 'Reset password link has been sent to your email' });
   },
 
   resetPassword: async (req, res, next) => {
@@ -158,7 +175,7 @@ module.exports = {
     // Delete ticket
     ticket.remove();
 
-    res.status(200).json({ message: 'Password has been changed successfully.' });
+    res.status(200).json({ message: 'Password has been changed successfully' });
   },
 
   verifyEmail: async (req, res, next) => {
@@ -176,6 +193,12 @@ module.exports = {
     // Delete ticket
     ticket.remove();
 
-    res.status(200).json({ message: 'Account has been verified successfully.' });
+    res.status(200).json({ message: 'Account has been verified successfully' });
   },
+
+  me: async (req, res, next) => {
+    const user = await User.findOne({_id: req.user.id})
+      .populate('leader', ['code', 'name']);
+    res.status(200).json(user);
+  }
 }

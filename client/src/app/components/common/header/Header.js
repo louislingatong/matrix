@@ -55,7 +55,7 @@ function Header({isFixedHeader}) {
               !_.isEmpty(_.filter(hideLoginButton, path => {
                 return _.includes(location.pathname, path);
               })) &&
-                <Nav.Link to="/login" as={Link}>Close</Nav.Link>
+                <Nav.Link to="/login" as={Link}>Login</Nav.Link>
           }
         </Nav>
       </Navbar.Collapse>

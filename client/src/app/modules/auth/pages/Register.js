@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {useHistory} from 'react-router-dom';
 import {useDispatch} from 'react-redux';
 import {Alert, Card, Col, Container, Image, Row} from 'react-bootstrap';
+import _ from 'lodash';
 import logo from '../../../../assets/images/logo_b.png';
 import RegisterForm from '../forms/RegisterForm';
 import {register} from '../authService';
@@ -10,7 +11,7 @@ function Register() {
   const history = useHistory();
   const dispatch = useDispatch();
   const [error, setError] = useState({});
-  const [alertErrorMessage, setAlertErrorMessage] = useState('');
+  const [alertMessage, setAlertMessage] = useState({});
 
   const handleRedirect = (path) => {
     history.push(path, {from: {path: history.location.pathname}})
@@ -21,14 +22,17 @@ function Register() {
       if (err.status === 422) {
         setError(err.error);
       } else {
-        setAlertErrorMessage(err.error)
+        setAlertMessage({
+          type: 'danger',
+          message: err.error
+        });
       }
     });
   };
 
-  const handleCloseAlertErrorMessage = () => {
-    setAlertErrorMessage('');
-  }
+  const handleCloseAlertMessage = () => {
+    setAlertMessage({});
+  };
 
   return (
     <Container>
@@ -41,9 +45,9 @@ function Register() {
         <Col xs={12} sm={12} md={5}>
           <Card>
             {
-              !!alertErrorMessage &&
-              <Alert variant="danger" onClose={handleCloseAlertErrorMessage} dismissible>
-                {alertErrorMessage}
+              !_.isEmpty(alertMessage) &&
+              <Alert variant={alertMessage.type} onClose={handleCloseAlertMessage} dismissible>
+                {alertMessage.message}
               </Alert>
             }
             <Card.Body>

@@ -2,6 +2,31 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const { user } = require('../config');
 
+const autoHashPassword = async function(next) {
+  try {
+    // Generate a password hash
+    const hashedPassword = await bcrypt.hash(this.password, 10);
+
+    // Override hashed password to the password
+    this.password = hashedPassword;
+    next();
+  } catch (err) {
+    next(err);
+  }
+};
+
+const autoPopulateMembers = function (next) {
+  try {
+    this.populate({
+      path: 'members',
+      select: ['code', 'name'],
+    });
+    next();
+  } catch (err) {
+    next(err);
+  }
+};
+
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
@@ -51,27 +76,10 @@ const userSchema = new Schema({
   }
 });
 
-userSchema.pre('save', async function(next) {
-  try {
-    // Generate a password hash
-    const hashedPassword = await bcrypt.hash(this.password, 10);
-
-    // Override hashed password to the password
-    this.password = hashedPassword;
-    next();
-  } catch (err) {
-    next(err);
-  }
-});
-
-userSchema.pre(['find', 'findOne'], async function(next) {
-  try {
-    this.populate('members');
-    next();
-  } catch (err) {
-    next(err);
-  }
-});
+userSchema
+  .pre('save', autoHashPassword)
+  .pre('find', autoPopulateMembers)
+  .pre('findOne', autoPopulateMembers);
 
 userSchema.methods.validatePassword = async function(password) {
   try {

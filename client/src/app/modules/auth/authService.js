@@ -66,7 +66,7 @@ export function resetPassword(params) {
     return new Promise((resolve, reject) => {
       Http.post('auth/reset-password', params)
         .then((res) => {
-          resolve(res);
+          resolve(res.data);
         })
         .catch(err => {
           reject(err);
@@ -90,7 +90,7 @@ export function forgotPassword(params) {
     return new Promise((resolve, reject) => {
       Http.post('auth/forgot-password', params)
         .then((res) => {
-          resolve(res);
+          resolve(res.data);
         })
         .catch(err => {
           reject(err);

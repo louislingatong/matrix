@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {useDispatch} from 'react-redux';
 import {Alert, Card, Col, Container, Image, Row} from 'react-bootstrap';
+import _ from 'lodash';
 import logo from '../../../../assets/images/logo_b.png';
 import ForgotPasswordForm from '../forms/ForgotPasswordForm';
 import {forgotPassword} from '../authService';
@@ -8,21 +9,29 @@ import {forgotPassword} from '../authService';
 function ForgotPassword() {
   const dispatch = useDispatch();
   const [error, setError] = useState({});
-  const [alertErrorMessage, setAlertErrorMessage] = useState('');
+  const [alertMessage, setAlertMessage] = useState({});
 
   const handleSubmitForm = (data) => {
-    dispatch(forgotPassword(data)).catch(err => {
-      if (err.status === 422) {
-        setError(err.error);
-      } else {
-        setAlertErrorMessage(err.error)
-      }
-    });
+    dispatch(forgotPassword(data))
+      .then(res => setAlertMessage({
+        type: 'success',
+        message: res.message
+      }))
+      .catch(err => {
+        if (err.status === 422) {
+          setError(err.error);
+        } else {
+          setAlertMessage({
+            type: 'danger',
+            message: err.error
+          });
+        }
+      });
   };
 
-  const handleCloseAlertErrorMessage = () => {
-    setAlertErrorMessage('');
-  }
+  const handleCloseAlertMessage = () => {
+    setAlertMessage({});
+  };
 
   return (
     <Container>
@@ -34,13 +43,13 @@ function ForgotPassword() {
       <Row className="justify-content-center">
         <Col xs={12} sm={12} md={5}>
           <Card>
-            {
-              !!alertErrorMessage &&
-              <Alert variant="danger" onClose={handleCloseAlertErrorMessage} dismissible>
-                {alertErrorMessage}
-              </Alert>
-            }
             <Card.Body>
+              {
+                !_.isEmpty(alertMessage) &&
+                <Alert variant={alertMessage.type} onClose={handleCloseAlertMessage} dismissible>
+                  {alertMessage.message}
+                </Alert>
+              }
               <ForgotPasswordForm handleSubmitForm={handleSubmitForm} error={error}/>
             </Card.Body>
           </Card>
