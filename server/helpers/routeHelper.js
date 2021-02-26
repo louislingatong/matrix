@@ -1,5 +1,5 @@
 const Joi = require('@hapi/joi');
-const { parseError } = require('./errorHelper');
+const { responseError } = require('./errorHelper');
 
 module.exports = {
   validateParam: (schema, name) => {
@@ -7,13 +7,9 @@ module.exports = {
       const result = schema.validate({ param: req['params'][name]});
       if (result.error) {
         const message = result.error.details[0].message;
-        return parseError(res, 400, message);
-      } else {
-        if (!req.value) req.value = {};
-        if (!req.value['params']) req.value['params'] = {};
-        req.value['params'][name] = result.value.params;
-        next();
+        return responseError(res, 400, message);
       }
+      next();
     }
   },
 
@@ -23,19 +19,15 @@ module.exports = {
       if (result.error) {
          const name = result.error.details[0].context.label;
          const message = result.error.details[0].message;
-        return parseError(res, 422, {[name]: message});
-      } else {
-        if (!req.value) req.value = {};
-        if (!req.value['body']) req.value['body'] = {};
-        req.value['body'] = result.value;
-        next();
+        return responseError(res, 422, {[name]: message});
       }
+      next();
     }
   },
 
   schemas: {
     idSchema: Joi.object().keys({
-      param: Joi.string().regex(/^[0-9a-fA-F]{24}$/),
+      param: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required()
     }),
 
     registerSchema: Joi.object().keys({

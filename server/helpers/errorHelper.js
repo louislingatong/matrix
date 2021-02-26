@@ -1,5 +1,5 @@
 module.exports = {
-  parseError: (res, status, error) => {
+  responseError: (res, status, error) => {
     switch (status) {
       case 422:
         const name = Object.keys(error)[0];

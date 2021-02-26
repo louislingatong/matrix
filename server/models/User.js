@@ -58,8 +58,15 @@ userSchema.pre('save', async function(next) {
 
     // Override hashed password to the password
     this.password = hashedPassword;
+    next();
+  } catch (err) {
+    next(err);
+  }
+});
 
-
+userSchema.pre(['find', 'findOne'], async function(next) {
+  try {
+    this.populate('members');
     next();
   } catch (err) {
     next(err);

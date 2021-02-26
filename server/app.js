@@ -3,6 +3,9 @@ const logger = require('morgan');
 const mongoose = require('mongoose');
 const cors = require("cors");
 
+const authRoutes = require('./routes/authRoute');
+const userRoutes = require('./routes/userRoute')
+
 mongoose.connect(process.env.DB_CONNECT,
   { useNewUrlParser: true, useUnifiedTopology: true },
   () => console.log('Connected to DB!'));
@@ -20,8 +23,8 @@ app.use(
 );
 
 // Routes
-app.use('/auth', require('./routes/authRoute'));
-app.use('/users', require('./routes/userRoute'));
+app.use('/auth', authRoutes);
+app.use('/users', userRoutes);
 
 // Catch 404 Errors and forward then to error handler
 app.use((req, res, next) => {

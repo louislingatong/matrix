@@ -52,9 +52,9 @@ function Header({isFixedHeader}) {
           {
             isAuthenticated ?
               <Nav.Link onClick={handleLogout}>Logout</Nav.Link> :
-              _.filter(hideLoginButton, path => {
+              !_.isEmpty(_.filter(hideLoginButton, path => {
                 return _.includes(location.pathname, path);
-              }).length &&
+              })) &&
                 <Nav.Link to="/login" as={Link}>Close</Nav.Link>
           }
         </Nav>

@@ -4,7 +4,7 @@ const User = require('../models/User');
 const Profile = require('../models/Profile');
 const Ticket = require('../models/Ticket');
 const { auth } = require('../config');
-const { parseError } = require('../helpers/errorHelper');
+const { responseError } = require('../helpers/errorHelper');
 
 const eventEmitter = require('../events/ticketEvent');
 
@@ -29,30 +29,30 @@ generateCode = async () => {
 module.exports = {
   register: async (req, res, next) => {
     // Check email if already exist
-    const emailExist = await User.findOne({email: req.value.body.email});
-    if (emailExist) { return parseError(res, 422, { email: 'Email is already exist.' }); }
+    const emailExist = await User.findOne({email: req.body.email});
+    if (emailExist) { return responseError(res, 422, { email: 'Email is already exist.' }); }
 
     // Check username if already exist
-    const usernameExist = await User.findOne({username: req.value.body.username});
-    if (usernameExist) { return parseError(res, 422, { username: 'Username is already exist.' }); }
+    const usernameExist = await User.findOne({username: req.body.username});
+    if (usernameExist) { return responseError(res, 422, { username: 'Username is already exist.' }); }
 
     // Generate code
     const code = await generateCode();
 
     // Name
-    const name = `${req.value.body.firstName} ${req.value.body.lastName}`
+    const name = `${req.body.firstName} ${req.body.lastName}`
 
     // Create new user
     const user = new User({
       code,
       name,
-      username: req.value.body.username,
-      email: req.value.body.email,
-      password: req.value.body.password
+      username: req.body.username,
+      email: req.body.email,
+      password: req.body.password
     });
 
     // Find the leader specified in code
-    const leader = await User.findOne({code: req.value.body.code});
+    const leader = await User.findOne({code: req.body.code});
 
     // If leader doesn't exists, handle it
     if (leader) {
@@ -71,8 +71,8 @@ module.exports = {
 
     // Create new profile
     const profile = new Profile({
-      firstName: req.value.body.firstName,
-      lastName: req.value.body.lastName,
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
     });
 
     // Assign a user to profile
@@ -116,8 +116,8 @@ module.exports = {
 
   forgotPassword: async (req, res, next) => {
     // Find the user specified in email
-    const user = await User.findOne({email: req.value.body.email});
-    if (!user) { return parseError(res, 422, { email: 'Email is invalid'}); }
+    const user = await User.findOne({email: req.body.email});
+    if (!user) { return responseError(res, 422, { email: 'Email is invalid'}); }
 
     // Generate ticket token
     const token = await randomstring.generate();
@@ -144,15 +144,15 @@ module.exports = {
 
   resetPassword: async (req, res, next) => {
     // Find the ticket specified in token
-    const ticket = await Ticket.findOne({ token: req.value.body.token }).populate('owner');
-    if (!ticket) { return parseError(res, 422, { token: 'Token is invalid'}); }
+    const ticket = await Ticket.findOne({ token: req.body.token }).populate('owner');
+    if (!ticket) { return responseError(res, 422, { token: 'Token is invalid'}); }
 
     // Check token if expired
     const expiredTicket = Date.now() > ticket.expireAt;
-    if (expiredTicket) { return parseError(res, 422, { token: 'Token is already expired'}); }
+    if (expiredTicket) { return responseError(res, 422, { token: 'Token is already expired'}); }
 
     // Update Password
-    ticket.owner.password = req.value.body.password;
+    ticket.owner.password = req.body.password;
     ticket.owner.save();
 
     // Delete ticket
@@ -164,11 +164,11 @@ module.exports = {
   verifyEmail: async (req, res, next) => {
     // Find the ticket specified in token
     const ticket = await Ticket.findOne({ token: req.params.token }).populate('owner');
-    if (!ticket) { return parseError(res, 400, 'Invalid token'); }
+    if (!ticket) { return responseError(res, 400, 'Invalid token'); }
 
     // Check token if expired
     const expiredTicket = Date.now() > ticket.expireAt;
-    if (expiredTicket) { return parseError(res, 400, 'Token is already expired'); }
+    if (expiredTicket) { return responseError(res, 400, 'Token is already expired'); }
 
     // Change user status to active
     ticket.owner.updateOne({ status: 'ACTIVE' });

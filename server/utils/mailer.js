@@ -4,7 +4,7 @@ const { mail } = require('../config');
 const path = require('path');
 
 const mailConfig = {
-  host: mail.host,
+  service: mail.service,
   port: mail.port,
   secure: true,
   auth: {

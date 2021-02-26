@@ -6,10 +6,10 @@ const { validateParam, validateBody, schemas } = require('../helpers/routeHelper
 
 const passportJWT = passport.authenticate('jwt', { session: false });
 
-router.get('/', passportJWT, UserController.index);
-router.get('/:userId', validateParam(schemas.idSchema, 'userId'), passportJWT, UserController.getUser);
-router.put('/:userId', validateParam(schemas.idSchema, 'userId'), passportJWT, UserController.replaceUser);
-router.patch('/:userId', validateParam(schemas.idSchema, 'userId'), passportJWT, UserController.updateUser);
-router.get('/:userId/members', validateParam(schemas.idSchema, 'userId'), passportJWT, UserController.getMembers);
+router.route('/')
+  .get(passportJWT, UserController.index);
+
+router.route('/:userId')
+  .get(passportJWT, validateParam(schemas.idSchema, 'userId'), UserController.getUser);
 
 module.exports = router;
