@@ -16,10 +16,8 @@ function User() {
     }
   }, [users]);
 
-  console.log(users);
-
   return (
-    <Container>
+    <Container fluid="xl">
       <Row className="justify-content-center">
         <Col>
           <OrganizationalChart data={users}/>
