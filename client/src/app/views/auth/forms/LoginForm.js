@@ -1,18 +1,23 @@
 import React, {useEffect} from 'react';
 import {useForm} from 'react-hook-form';
-import {Link} from 'react-router-dom';
+import {Link, useHistory} from 'react-router-dom';
 import {Form, Button, Container, Row, Col} from 'react-bootstrap';
 import _ from 'lodash';
 import Loader from '../../../components/loader/Loader';
 
 function LoginForm({handleSubmitForm, error, isLoading}) {
+  const history = useHistory();
   const {register, errors, handleSubmit, setError, reset} = useForm();
 
   useEffect(() => {
     if (!_.isEmpty(error)) {
       setError(error.name, error.value);
     }
-  }, [error])
+  }, [error]);
+
+  const handleRedirect = (path) => {
+    history.push(path, {from: history.location.pathname})
+  };
 
   const onSubmitForm = (data) => {
     reset({
@@ -49,7 +54,7 @@ function LoginForm({handleSubmitForm, error, isLoading}) {
           <Form.Label>Password</Form.Label>
           <Form.Control type="password" placeholder="Enter password"
                         name="password"
-                        isValid={!!errors.password}
+                        isInvalid={!!errors.password}
                         ref={
                           register({
                             required: 'Password is required.'
@@ -70,7 +75,9 @@ function LoginForm({handleSubmitForm, error, isLoading}) {
           </Button>
         </Col>
         <Col className="text-right">
-          <Button className="text-decoration-none" variant="link" to="/forgot-password" as={Link}>
+          <Button className="text-decoration-none" variant="link"
+                  to={{pathname: '/forgot-password', state: {from: history.location.pathname}}}
+                  as={Link}>
             Forgot Password
           </Button>
         </Col>

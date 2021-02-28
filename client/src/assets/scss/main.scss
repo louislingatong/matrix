@@ -1,3 +1,7 @@
+.form-control[readonly] {
+  background-color: #fff !important;
+}
+
 @import "~bootstrap/scss/bootstrap";
 
 .loader-wrapper {

@@ -1,11 +1,12 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useForm} from 'react-hook-form';
 import {Form, Button, Container} from 'react-bootstrap';
 import _ from 'lodash';
 import Loader from '../../../components/loader/Loader';
 
-function RegisterForm({handleSubmitForm, error, isLoading}) {
-  const {register, errors, handleSubmit, setError, watch, reset} = useForm();
+function ProfileForm({handleSubmitForm, error, isLoading, profile}) {
+  const {register, errors, handleSubmit, setError, reset} = useForm();
+  const [mode, setMode] = useState('view');
 
   useEffect(() => {
     if (!_.isEmpty(error)) {
@@ -18,8 +19,6 @@ function RegisterForm({handleSubmitForm, error, isLoading}) {
       code: '',
       email: '',
       username: '',
-      password: '',
-      confirmPassword: '',
       firstName: '',
       lastName: '',
     });
@@ -28,15 +27,19 @@ function RegisterForm({handleSubmitForm, error, isLoading}) {
 
   return (
     <Container>
-      <h3>Register</h3>
+      {isLoading && <Loader type="circular"/>}
+      <h3>Profile</h3>
       <Form>
         <Form.Group controlId="formCode">
           <Form.Label>Code</Form.Label>
-          <Form.Control placeholder="Enter code"
-                        name="code"
+          <Form.Control name="code"
                         isInvalid={!!errors.code}
                         ref={
                           register()
+                        }
+                        defaultValue={profile.code}
+                        readOnly={
+                          (mode === 'view')
                         }/>
           {
             errors.code &&
@@ -49,7 +52,7 @@ function RegisterForm({handleSubmitForm, error, isLoading}) {
       <Form>
         <Form.Group controlId="formEmail">
           <Form.Label>Email</Form.Label>
-          <Form.Control type="email" placeholder="Enter email"
+          <Form.Control type="email"
                         name="email"
                         isInvalid={!!errors.email}
                         ref={
@@ -60,6 +63,10 @@ function RegisterForm({handleSubmitForm, error, isLoading}) {
                               message: 'Incorrect email format.'
                             }
                           })
+                        }
+                        defaultValue={profile.email}
+                        readOnly={
+                          mode === 'view'
                         }/>
           {
             errors.email &&
@@ -72,57 +79,21 @@ function RegisterForm({handleSubmitForm, error, isLoading}) {
       <Form>
         <Form.Group controlId="formUsername">
           <Form.Label>Username</Form.Label>
-          <Form.Control placeholder="Enter username"
-                        name="username"
+          <Form.Control name="username"
                         isInvalid={!!errors.username}
                         ref={
                           register({
                             required: 'Username is required.'
                           })
+                        }
+                        defaultValue={profile.username}
+                        readOnly={
+                          mode === 'view'
                         }/>
           {
             errors.username &&
             <Form.Text className="text-danger">
               {errors.username.message}
-            </Form.Text>
-          }
-        </Form.Group>
-      </Form>
-      <Form>
-        <Form.Group controlId="formPassword">
-          <Form.Label>Password</Form.Label>
-          <Form.Control type="password" placeholder="Enter password"
-                        name="password"
-                        isInvalid={!!errors.password}
-                        ref={
-                          register({
-                            required: 'Password is required.'
-                          })
-                        }/>
-          {
-            errors.password &&
-            <Form.Text className="text-danger">
-              {errors.password.message}
-            </Form.Text>
-          }
-        </Form.Group>
-      </Form>
-      <Form>
-        <Form.Group controlId="formConfirmPassword">
-          <Form.Label>Confirm Password</Form.Label>
-          <Form.Control type="password" placeholder="Enter confirm password"
-                        name="confirmPassword"
-                        isInvalid={!!errors.confirmPassword}
-                        ref={
-                          register({
-                            required: 'Confirm Password is required',
-                            validate: (value) => value === watch('password') || 'Passwords don\'t match.'
-                          })
-                        }/>
-          {
-            errors.confirmPassword &&
-            <Form.Text className="text-danger">
-              {errors.confirmPassword.message}
             </Form.Text>
           }
         </Form.Group>
@@ -137,6 +108,10 @@ function RegisterForm({handleSubmitForm, error, isLoading}) {
                           register({
                             required: 'First Name is required.'
                           })
+                        }
+                        defaultValue={profile.profile.firstName}
+                        readOnly={
+                          mode === 'view'
                         }/>
           {
             errors.username &&
@@ -156,6 +131,10 @@ function RegisterForm({handleSubmitForm, error, isLoading}) {
                           register({
                             required: 'Last Name is required.'
                           })
+                        }
+                        defaultValue={profile.profile.lastName}
+                        readOnly={
+                          mode === 'view'
                         }/>
           {
             errors.lastName &&
@@ -165,11 +144,14 @@ function RegisterForm({handleSubmitForm, error, isLoading}) {
           }
         </Form.Group>
       </Form>
-      <Button variant="secondary" onClick={handleSubmit(onSubmitForm)} disabled={isLoading}>
-        {isLoading ? <Loader type="beat" color="light"/> : 'Register' }
-      </Button>
+      {
+        mode === 'update' &&
+        <Button variant="secondary" onClick={handleSubmit(onSubmitForm)} disabled={isLoading}>
+          {isLoading ? <Loader type="beat" color="light"/> : 'Register' }
+        </Button>
+      }
     </Container>
   );
 }
 
-export default RegisterForm;
+export default ProfileForm;

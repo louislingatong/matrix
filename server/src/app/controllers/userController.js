@@ -8,7 +8,7 @@ module.exports = {
       })
       .populate('profile', 'firstName lastName')
       .select('code name username email');
-    res.status(200).json(users);
+    res.status(200).json({ list: users });
   },
 
   getUser: async (req, res, next) => {
@@ -19,6 +19,6 @@ module.exports = {
       })
       .populate('profile', 'firstName lastName')
       .select('code name username email');
-    res.status(200).json(user);
+    res.status(200).json({ data: user });
   },
 }

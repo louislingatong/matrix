@@ -27,7 +27,6 @@ function LoginForm({handleSubmitForm, error, isLoading}) {
 
   return (
     <Container>
-      {isLoading && <Loader type="circular"/>}
       <h3>Reset Password</h3>
       <Form>
         <Form.Group controlId="formToken">

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {forwardRef} from 'react';
 import PropTypes from 'prop-types';
 import {useDispatch, useSelector} from 'react-redux';
 import {authLogout, loggedInStatus} from '../../store/authSlice';
@@ -42,8 +42,15 @@ function Header({isFixedHeader}) {
           {
             isAuthenticated && (
               <React.Fragment>
-                <Nav.Link active={location.pathname === '/'} to="/" as={Link}>Dashboard</Nav.Link>
-                <Nav.Link active={location.pathname === '/users'} to="/users" as={Link}>Users</Nav.Link>
+                <Nav.Link active={location.pathname === '/'}
+                          to={{pathname: '/', state: {from: location.pathname}}}
+                          as={Link}>Dashboard</Nav.Link>
+                <Nav.Link active={location.pathname === '/users'}
+                          to={{pathname: '/users', state: {from: location.pathname}}}
+                          as={Link}>Users</Nav.Link>
+                <Nav.Link active={location.pathname === '/profile'}
+                          to={{pathname: '/profile', state: {from: location.pathname}}}
+                          as={Link}>Profile</Nav.Link>
               </React.Fragment>
             )
           }
@@ -55,7 +62,7 @@ function Header({isFixedHeader}) {
               !_.isEmpty(_.filter(hideLoginButton, path => {
                 return _.includes(location.pathname, path);
               })) &&
-                <Nav.Link to="/login" as={Link}>Login</Nav.Link>
+                <Nav.Link to={'/login'} as={Link}>Login</Nav.Link>
           }
         </Nav>
       </Navbar.Collapse>

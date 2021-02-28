@@ -2,8 +2,9 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const { user } = require('../../../config');
 
-const autoHashPassword = async function(next) {
+const autoHashPassword = async function (next) {
   try {
+    console.log(this.password);
     // Generate a password hash
     const hashedPassword = await bcrypt.hash(this.password, 10);
 

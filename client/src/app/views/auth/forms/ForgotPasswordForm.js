@@ -22,7 +22,6 @@ function ForgotPasswordForm({handleSubmitForm, error, isLoading}) {
 
   return (
     <Container>
-      {isLoading && <Loader type="circular"/>}
       <h3>Forgot Password</h3>
       <Form>
         <Form.Group controlId="formEmail">

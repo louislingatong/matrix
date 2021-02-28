@@ -8,7 +8,7 @@ module.exports = {
       const result = schema.validate({ param: req['params'][name]});
       if (result.error) {
         const message = result.error.details[0].message;
-        parseError(res, 400, message);
+        return parseError(res, 400, message);
       }
       next();
     }
@@ -20,7 +20,7 @@ module.exports = {
       if (result.error) {
         const name = result.error.details[0].context.label;
         const message = result.error.details[0].message;
-        parseError(res, 422, {[name]: message});
+        return parseError(res, 422, {[name]: message});
       }
       next();
     }

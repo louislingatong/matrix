@@ -16,7 +16,7 @@ function Register() {
   const [alertMessage, setAlertMessage] = useState({});
 
   const handleRedirect = (path) => {
-    history.push(path, {from: {path: history.location.pathname}})
+    history.push(path, {from: history.location.pathname})
   };
 
   const handleSubmitForm = (data) => {
@@ -46,13 +46,13 @@ function Register() {
       <Row className="justify-content-center">
         <Col xs={12} sm={12} md={5}>
           <Card>
-            {
-              !_.isEmpty(alertMessage) &&
-              <Alert variant={alertMessage.type} onClose={handleCloseAlertMessage} dismissible>
-                {alertMessage.message}
-              </Alert>
-            }
             <Card.Body>
+              {
+                !_.isEmpty(alertMessage) &&
+                <Alert variant={alertMessage.type} onClose={handleCloseAlertMessage} dismissible>
+                  {alertMessage.message}
+                </Alert>
+              }
               <RegisterForm handleSubmitForm={handleSubmitForm} error={error} isLoading={isLoading}/>
             </Card.Body>
           </Card>

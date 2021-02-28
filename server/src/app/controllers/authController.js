@@ -1,4 +1,5 @@
 const JWT = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 const randomstring  = require('randomstring');
 const User = require('../models/User');
 const Profile = require('../models/Profile');
@@ -44,26 +45,28 @@ createUser = async (data, leader) => {
 };
 
 createProfile = async (data, user) => {
-  const profile = await Profile.create(data);
+  const profile = new Profile(data);
+  await profile.save();
   await user.updateOne({ profile })
   return profile;
 };
 
 createTicket = async (data) => {
- const ticket = await Ticket.create(data);
- return ticket;
+  const ticket = new Ticket(data);
+  await ticket.save();
+  return ticket;
 };
 
 module.exports = {
   register: async (req, res, next) => {
     const emailExist = await User.findOne({email: req.body.email});
     if (emailExist) {
-      parseError(res, 422, { email: 'Email is already exist.' });
+      return parseError(res, 422, { email: 'Email is already exist.' });
     }
 
     const usernameExist = await User.findOne({username: req.body.username});
     if (usernameExist) {
-      parseError(res, 422, { username: 'Username is already exist.' });
+      return parseError(res, 422, { username: 'Username is already exist.' });
     }
 
     const leader = await User.findOne({code: req.body.code});
@@ -71,11 +74,11 @@ module.exports = {
     if (leader) {
       const membersCount = await User.countDocuments({ leader });
       if (membersCount >= app.maxMembers) {
-        parseError(res, 400, `Code ${leader.code} is already in maximum of ${app.maxMembers} members`);
+        return parseError(res, 400, `Code ${leader.code} is already in maximum of ${app.maxMembers} members`);
       }
 
       if (leader.level >= app.maxLevels) {
-        parseError(res, 400, `User level is limited only for ${app.maxLevel} levels`);
+        return parseError(res, 400, `User level is limited only for ${app.maxLevels} levels`);
       }
     }
 
@@ -98,9 +101,8 @@ module.exports = {
     }, user);
 
     const token = await randomstring.generate();
-    const expireAt = new Date().setDate(new Date().getTime() + app.ticketExpirationMinutes * 60000);
 
-    const ticket = await createTicket({ user, token, expireAt });
+    const ticket = await createTicket({ user, token });
 
     newEventEmitter.emit('sendVerifyEmailLink', user.name, user.email, ticket.token);
 
@@ -118,13 +120,12 @@ module.exports = {
   forgotPassword: async (req, res, next) => {
     const user = await User.findOne({email: req.body.email});
     if (!user) {
-      parseError(res, 422, { email: 'Email is invalid'});
+      return parseError(res, 422, { email: 'Email is invalid'});
     }
 
     const token = await randomstring.generate();
-    const expireAt = new Date().setDate(new Date().getTime() + app.ticketExpirationMinutes * 60000);
 
-    const ticket = await createTicket({ user, token, expireAt });
+    const ticket = await createTicket({ user, token });
 
     newEventEmitter.emit('sendResetPasswordLink', user.name, user.email, ticket.token);
 
@@ -132,9 +133,9 @@ module.exports = {
   },
 
   resetPassword: async (req, res, next) => {
-    const ticket = await Ticket.findOne({ token: req.body.token }).populate('owner');
+    const ticket = await Ticket.findOne({ token: req.body.token }).populate('user');
     if (!ticket) {
-      parseError(res, 422, { token: 'Token is invalid'});
+      return parseError(res, 422, { token: 'Token is invalid'});
     }
 
     const expiredTicket = Date.now() > ticket.expireAt;
@@ -142,7 +143,9 @@ module.exports = {
       parseError(res, 422, { token: 'Token is already expired'});
     }
 
-    ticket.owner.updateOne({ password: req.body.password });
+    const hashedPassword = await bcrypt.hash(req.body.password, 10)
+
+    await ticket.user.updateOne({ password: hashedPassword });
 
     ticket.remove();
 
@@ -152,15 +155,15 @@ module.exports = {
   verifyEmail: async (req, res, next) => {
     const ticket = await Ticket.findOne({ token: req.params.token }).populate('owner');
     if (!ticket) {
-      parseError(res, 400, 'Token is invalid');
+      return parseError(res, 400, 'Token is invalid');
     }
 
     const expiredTicket = Date.now() > ticket.expireAt;
     if (expiredTicket) {
-      parseError(res, 400, 'Token is already expired');
+      return parseError(res, 400, 'Token is already expired');
     }
 
-    ticket.owner.updateOne({ status: 'ACTIVE' });
+    ticket.user.updateOne({ status: 'ACTIVE' });
 
     ticket.remove();
 

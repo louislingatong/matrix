@@ -16,7 +16,7 @@ function Login() {
   const [alertMessage, setAlertMessage] = useState({});
 
   const handleRedirect = (path) => {
-    history.push(path, {from: {path: history.location.pathname}})
+    history.push(path, {from: history.location.pathname})
   };
 
   const handleSubmitForm = (data) => {

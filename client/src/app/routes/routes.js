@@ -2,11 +2,18 @@ import {lazy} from 'react'
 
 export default [
   {
-    name: 'Home',
+    name: 'Dashboard',
     path: '/',
     exact: true,
     auth: true,
     component: lazy(() => import('../views/dashboard')),
+  },
+  {
+    name: 'Profile',
+    path: '/profile',
+    exact: true,
+    auth: true,
+    component: lazy(() => import('../views/profile')),
   },
   {
     name: 'Login',

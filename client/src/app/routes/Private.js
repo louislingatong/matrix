@@ -1,41 +1,27 @@
-import React, {Suspense, useEffect} from 'react';
-import {Redirect, Route} from 'react-router-dom';
-import {useDispatch, useSelector} from 'react-redux';
-import _ from 'lodash';
+import React, {Suspense} from 'react';
+import {Redirect, Route, useLocation} from 'react-router-dom';
 import Loader from '../components/loader/Loader';
-import {authCheck, loggedInUser} from '../store/authSlice';
-import {me} from '../services/authService';
 
 function PrivateRoute({component: Component, isAuthenticated, ...rest}) {
-  const dispatch = useDispatch();
-  const profile = useSelector(loggedInUser);
-
-  useEffect(() => {
-    if (!isAuthenticated) {
-      dispatch(authCheck());
-    }
-
-    if (isAuthenticated && _.isEmpty(profile)) {
-      dispatch(me())
-    }
-  }, [isAuthenticated, profile])
+  const location = useLocation();
+  if (!isAuthenticated) {
+    return (
+      <Route {...rest} render={() =>
+        <Redirect to={{
+          pathname: '/login',
+          state: {
+            from: location.pathname
+          }
+        }}/>
+      }/>
+    )
+  }
 
   return (
     <Route {...rest} render={props => {
       return (
         <Suspense fallback={<Loader/>}>
-          {
-            isAuthenticated ?
-              <Component {...props} /> :
-              (
-                <Redirect to={{
-                  pathname: '/login',
-                  state: {
-                    from: props.location
-                  }
-                }}/>
-              )
-          }
+          <Component {...props} />
         </Suspense>
       )
     }}/>
