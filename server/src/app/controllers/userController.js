@@ -7,7 +7,7 @@ module.exports = {
         group: req.user.group, leader: req.user
       })
       .populate('profile', 'firstName lastName')
-      .select('code name username email');
+      .select('level code name email');
     res.status(200).json({ list: users });
   },
 
@@ -18,7 +18,7 @@ module.exports = {
         _id: req.params.userId
       })
       .populate('profile', 'firstName lastName')
-      .select('code name username email');
+      .select('level code name username email');
     res.status(200).json({ data: user });
   },
 }

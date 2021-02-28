@@ -2,6 +2,12 @@
   background-color: #fff !important;
 }
 
+.card {
+  min-width: 100px !important;
+  margin-bottom: 15px !important;
+  align-self: self-start;
+}
+
 @import "~bootstrap/scss/bootstrap";
 
 .loader-wrapper {
@@ -41,4 +47,20 @@
   position: sticky;
   top: 0;
   z-index: 1040;
+}
+
+.bg-primary-light {
+  background-color: #cce5ff;
+}
+
+.bg-success-light {
+  background-color: #d4edda;
+}
+
+.bg-warning-light {
+  background-color: #fff3cd;
+}
+
+.bg-secondary-light {
+  background-color: #e2e3e5;
 }

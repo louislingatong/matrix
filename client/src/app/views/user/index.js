@@ -1,14 +1,17 @@
 import React, {useEffect} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import {Col, Container, Row} from 'react-bootstrap';
+import {Card, Col, Container, Row, Button, OverlayTrigger, Popover} from 'react-bootstrap';
+import {FaUserCircle} from 'react-icons/fa';
 import _ from 'lodash';
 import {allUsers} from '../../store/userSlice';
+import {loggedInUser} from '../../store/authSlice';
 import {fetchAllUsers} from '../../services/userService';
 import OrganizationalChart from './components/OrganizationalChart';
 
 function User() {
   const dispatch = useDispatch();
   const users = useSelector(allUsers);
+  const profile = useSelector(loggedInUser);
 
   useEffect(() => {
     if (_.isEmpty(users)) {
@@ -16,11 +19,32 @@ function User() {
     }
   }, [users]);
 
+  const popover = (
+    <Popover id={`popover-${profile.code}`} className="text-center">
+      <Popover.Title as="h3" className="text-nowrap">[{profile.code}]&nbsp;{profile.name}</Popover.Title>
+      <Popover.Content>
+        <p><strong>Email</strong><br/>{profile.email}</p>
+      </Popover.Content>
+    </Popover>
+  );
+
   return (
-    <Container fluid="xl">
+    <Container>
       <Row className="justify-content-center">
-        <Col>
-          <OrganizationalChart data={users}/>
+        <h3>User Hierarchy</h3>
+      </Row>
+      <Row className="justify-content-center">
+        <Col className="text-center">
+          <Card className="bg-primary-light">
+            <Card.Body>
+              <OverlayTrigger trigger="focus" placement="bottom" overlay={popover}>
+                <Button variant="link">
+                  <FaUserCircle size={150} className="text-primary"/>
+                </Button>
+              </OverlayTrigger>
+              <OrganizationalChart data={users}/>
+            </Card.Body>
+          </Card>
         </Col>
       </Row>
     </Container>

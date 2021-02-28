@@ -39,9 +39,7 @@ function Register() {
   return (
     <Container>
       <Row className="justify-content-center">
-        <Col xs={12} sm={12} md={5} className="text-center">
-          <Image src={logo} fluid />
-        </Col>
+        <Image src={logo} fluid />
       </Row>
       <Row className="justify-content-center">
         <Col xs={12} sm={12} md={5}>

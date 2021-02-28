@@ -21,6 +21,9 @@ function Profile() {
   return (
     <Container>
       <Row className="justify-content-center">
+        <h3>Profile</h3>
+      </Row>
+      <Row className="justify-content-center">
         <Col xs={12} sm={12} md={5}>
           <Card>
             <Card.Body>
@@ -28,8 +31,6 @@ function Profile() {
             </Card.Body>
           </Card>
         </Col>
-      </Row>
-      <Row className="justify-content-center">
       </Row>
     </Container>
   )

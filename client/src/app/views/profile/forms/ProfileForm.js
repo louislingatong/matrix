@@ -27,8 +27,6 @@ function ProfileForm({handleSubmitForm, error, isLoading, profile}) {
 
   return (
     <Container>
-      {isLoading && <Loader type="circular"/>}
-      <h3>Profile</h3>
       <Form>
         <Form.Group controlId="formCode">
           <Form.Label>Code</Form.Label>

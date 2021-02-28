@@ -20,7 +20,7 @@ const autoPopulateMembers = function (next) {
   try {
     this.populate({
       path: 'members',
-      select: 'code name email',
+      select: 'level code name email',
       populate: {
         path: 'profile',
         select: 'firstName lastName'
