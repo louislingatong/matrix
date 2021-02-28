@@ -1,6 +1,7 @@
 import Http from '../utils/Http';
 import {authLogin, setMe} from '../store/authSlice';
 import {setLoading} from '../store/loaderSlice';
+import _ from 'lodash';
 
 /**
  * Login user
@@ -38,7 +39,7 @@ export function register(params) {
   return dispatch => {
     dispatch(setLoading(true));
     return new Promise((resolve, reject) => {
-      Http.post('auth/register', params)
+      Http.post('auth/register', _.pickBy(params))
         .then(res => {
           const {token} = res.data;
           dispatch(authLogin(token));
