@@ -1,12 +1,12 @@
 import axios from 'axios';
-import store from '../store/store';
+import store from '../store';
 import ErrorParser from './ErrorParser';
-import {authLogout} from '../modules/auth/authSlice';
+import {authLogout} from '../store/authSlice';
 
 // create new instance
 const Http = axios.create();
 
-// set default config
+// set default connect
 Http.defaults.baseURL = process.env.REACT_APP_API_URL;
 Http.defaults.headers.common.Accept = 'application/json';
 

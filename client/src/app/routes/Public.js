@@ -1,6 +1,6 @@
 import React, {lazy, Suspense} from 'react';
 import {Redirect, Route} from 'react-router-dom';
-import Loader from '../components/common/loader/Loader';
+import Loader from '../components/loader/Loader';
 
 function PublicRoutes({component: Component, isAuthenticated, ...rest}) {
   return (

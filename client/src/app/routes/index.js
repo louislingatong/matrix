@@ -4,7 +4,7 @@ import Layout from '../layout';
 import PrivateRoute from './Private';
 import PublicRoute from './Public';
 import routes from './routes';
-import {loggedInStatus} from '../modules/auth/authSlice';
+import {loggedInStatus} from '../store/authSlice';
 import {useSelector} from 'react-redux';
 
 function Routes() {

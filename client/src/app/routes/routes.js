@@ -1,11 +1,44 @@
-import dashboardRoute from '../modules/dashboard/dashboardRoute';
-import authRoutes from '../modules/auth/authRoutes';
-import userRoutes from '../modules/user/userRoutes';
+import {lazy} from 'react'
 
 export default [
-  ...dashboardRoute,
-  ...authRoutes,
-  ...userRoutes,
+  {
+    name: 'Home',
+    path: '/',
+    exact: true,
+    auth: true,
+    component: lazy(() => import('../views/dashboard')),
+  },
+  {
+    name: 'Login',
+    path: '/login',
+    exact: true,
+    component: lazy(() => import('../views/auth/Login')),
+  },
+  {
+    name: 'Register',
+    path: '/register',
+    exact: true,
+    component: lazy(() => import('../views/auth/Register')),
+  },
+  {
+    name: 'Forgot Password',
+    path: '/forgot-password',
+    exact: true,
+    component: lazy(() => import('../views/auth/ForgotPassword')),
+  },
+  {
+    name: 'Reset Password',
+    path: '/reset-password/:token',
+    exact: true,
+    component: lazy(() => import('../views/auth/ResetPassword')),
+  },
+  {
+    name: 'Users',
+    path: '/users',
+    exact: true,
+    auth: true,
+    component: lazy(() => import('../views/user'))
+  },
   {
     path: '*',
     notFound: true,

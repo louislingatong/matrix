@@ -2,9 +2,9 @@ import React, {Suspense, useEffect} from 'react';
 import {Redirect, Route} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
 import _ from 'lodash';
-import Loader from '../components/common/loader/Loader';
-import {authCheck, loggedInUser} from '../modules/auth/authSlice';
-import {me} from '../modules/auth/authService';
+import Loader from '../components/loader/Loader';
+import {authCheck, loggedInUser} from '../store/authSlice';
+import {me} from '../services/authService';
 
 function PrivateRoute({component: Component, isAuthenticated, ...rest}) {
   const dispatch = useDispatch();

@@ -1,5 +1,31 @@
 @import "~bootstrap/scss/bootstrap";
 
+.loader-wrapper {
+  position: fixed;
+  top: 56px;
+  width: 100%;
+}
+
+.loader-wrapper-overlay {
+  position: fixed;
+  top: 56px;
+  left: 0;
+  width: 100%;
+  height: calc(100vh - 112px);
+  background-color: rgba(255, 255, 255, 0.8);
+  z-index: 1040;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.scroll-to-top-wrapper {
+  position: fixed;
+  bottom: 10%;
+  right: 10%;
+  cursor: pointer;
+}
+
 .main-wrapper {
   min-height: calc(100vh - 112px);
 }

@@ -1,9 +1,9 @@
 import React from 'react';
 import {useSelector} from 'react-redux';
-import ScrollTop from '../components/common/scroll-top/ScrollTop';
+import ScrollTop from '../components/scroll-top/ScrollTop';
 import PrivateLayout from './Private';
 import PublicLayout from './Public';
-import {loggedInStatus} from '../modules/auth/authSlice';
+import {loggedInStatus} from '../store/authSlice';
 import {useLocation} from 'react-router-dom'
 import _ from 'lodash';
 
