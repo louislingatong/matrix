@@ -21,6 +21,13 @@ function Header({isFixedHeader}) {
     dispatch(authLogout());
   };
 
+  const hideToggleButton = [
+    '/login',
+    '/register',
+    '/forgot-password',
+    '/reset-password'
+  ];
+
   const hideLoginButton = [
     '/register',
     '/forgot-password',
@@ -37,7 +44,11 @@ function Header({isFixedHeader}) {
           alt="Matrix logo"
         />
       </Navbar.Brand>
-      <Navbar.Collapse id="basic-navbar-nav">
+      {
+        _.isEmpty(_.filter(hideToggleButton, path => _.includes(location.pathname, path))) &&
+        <Navbar.Toggle aria-controls="navbar-nav" />
+      }
+      <Navbar.Collapse id="navbar-nav">
         <Nav className="mr-auto">
           {
             isAuthenticated && (
@@ -59,9 +70,7 @@ function Header({isFixedHeader}) {
           {
             isAuthenticated ?
               <Nav.Link onClick={handleLogout}>Logout</Nav.Link> :
-              !_.isEmpty(_.filter(hideLoginButton, path => {
-                return _.includes(location.pathname, path);
-              })) &&
+              !_.isEmpty(_.filter(hideLoginButton, path => _.includes(location.pathname, path))) &&
                 <Nav.Link to={'/login'} as={Link}>Login</Nav.Link>
           }
         </Nav>

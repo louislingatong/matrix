@@ -5,6 +5,9 @@ import store from './app/store';
 import Routes from './app/routes';
 import * as serviceWorker from './serviceWorker';
 import './assets/scss/main.scss';
+import {authCheck} from './app/store/authSlice';
+
+store.dispatch(authCheck());
 
 ReactDOM.render(
   <React.StrictMode>

@@ -1,8 +1,7 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {Card, Col, Container, Row, Button, OverlayTrigger, Popover} from 'react-bootstrap';
 import {FaUserCircle} from 'react-icons/fa';
-import _ from 'lodash';
 import {allUsers} from '../../store/userSlice';
 import {loggedInUser} from '../../store/authSlice';
 import {fetchAllUsers} from '../../services/userService';
@@ -10,14 +9,15 @@ import OrganizationalChart from './components/OrganizationalChart';
 
 function User() {
   const dispatch = useDispatch();
-  const users = useSelector(allUsers);
   const profile = useSelector(loggedInUser);
+  const users = useSelector(allUsers);
+  const [loadUsers, setLoadUsers] = useState(true);
 
   useEffect(() => {
-    if (_.isEmpty(users)) {
-      dispatch(fetchAllUsers());
+    if (loadUsers) {
+      dispatch(fetchAllUsers()).then(() => setLoadUsers(false));
     }
-  }, [users]);
+  }, [loadUsers]);
 
   const popover = (
     <Popover id={`popover-${profile.code}`} className="text-center">

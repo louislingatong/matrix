@@ -1,31 +1,16 @@
 import React, {useEffect} from 'react';
-import {BrowserRouter as Router, Redirect, Switch} from 'react-router-dom';
-import {useDispatch, useSelector} from 'react-redux';
-import _ from 'lodash';
+import {Router as ReactRouter, Redirect, Switch} from 'react-router-dom';
+import {createBrowserHistory} from 'history';
 import Layout from '../layout';
 import PrivateRoute from './Private';
 import PublicRoute from './Public';
 import routes from './routes';
-import {authCheck, loggedInStatus, loggedInUser} from '../store/authSlice';
-import {me} from '../services/authService';
+
+const history = createBrowserHistory();
 
 function Routes() {
-  const dispatch = useDispatch();
-  const isAuthenticated = useSelector(loggedInStatus);
-  const profile = useSelector(loggedInUser);
-
-  useEffect(() => {
-    if (!isAuthenticated) {
-      dispatch(authCheck());
-    }
-
-    if (isAuthenticated && _.isEmpty(profile)) {
-      dispatch(me())
-    }
-  }, [isAuthenticated, profile]);
-
   return (
-    <Router>
+    <ReactRouter history={history}>
       <Layout>
         <Switch>
           {
@@ -34,14 +19,14 @@ function Routes() {
                 return <Redirect key={i} to={{pathname: '/login'}}/>
               }
               if (route.auth) {
-                return <PrivateRoute key={i} isAuthenticated={isAuthenticated} {...route} />
+                return <PrivateRoute key={i} {...route} />
               }
-              return <PublicRoute key={i} isAuthenticated={isAuthenticated} {...route} />
+              return <PublicRoute key={i} {...route} />
             })
           }
         </Switch>
       </Layout>
-    </Router>
+    </ReactRouter>
   );
 }
 

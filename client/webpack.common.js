@@ -1,5 +1,5 @@
 const path = require('path');
-const Dotenv = require('dotenv-webpack');
+const webpack = require('webpack');
 
 const settings = {
   distPath: path.join(__dirname, 'dist'),
@@ -17,9 +17,8 @@ const config = {
     vendor: srcFile('assets/js/main.js')
   },
   plugins: [
-    new Dotenv({
-      path: './.env',
-      safe: true
+    new webpack.EnvironmentPlugin({
+      'REACT_APP_API_URL': 'http://localhost:8000/',
     })
   ],
   module: {

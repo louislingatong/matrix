@@ -1,6 +1,6 @@
 import Http from '../utils/Http';
 import {authLogin, setMe} from '../store/authSlice';
-import {setLoading} from '../store/loaderSlice';
+import {enableLoading, disableLoading} from '../store/loaderSlice';
 import _ from 'lodash';
 
 /**
@@ -11,7 +11,7 @@ import _ from 'lodash';
  */
 export function login(params) {
   return dispatch => {
-    dispatch(setLoading(true));
+    dispatch(enableLoading());
     return new Promise((resolve, reject) => {
       Http.post('auth/login', params)
         .then(res => {
@@ -23,7 +23,7 @@ export function login(params) {
           reject(err);
         })
         .finally(() => {
-          dispatch(setLoading(false));
+          dispatch(disableLoading());
         })
     })
   }
@@ -37,7 +37,7 @@ export function login(params) {
  */
 export function register(params) {
   return dispatch => {
-    dispatch(setLoading(true));
+    dispatch(enableLoading());
     return new Promise((resolve, reject) => {
       Http.post('auth/register', _.pickBy(params))
         .then(res => {
@@ -49,7 +49,7 @@ export function register(params) {
           reject(err);
         })
         .finally(() => {
-          dispatch(setLoading(false));
+          dispatch(disableLoading());
         })
     })
   }
@@ -63,7 +63,7 @@ export function register(params) {
  */
 export function resetPassword(params) {
   return dispatch => {
-    dispatch(setLoading(true));
+    dispatch(enableLoading());
     return new Promise((resolve, reject) => {
       Http.post('auth/reset-password', params)
         .then((res) => {
@@ -73,7 +73,7 @@ export function resetPassword(params) {
           reject(err);
         })
         .finally(() => {
-          dispatch(setLoading(false));
+          dispatch(disableLoading());
         })
     })
   }
@@ -87,7 +87,7 @@ export function resetPassword(params) {
  */
 export function forgotPassword(params) {
   return dispatch => {
-    dispatch(setLoading(true));
+    dispatch(enableLoading());
     return new Promise((resolve, reject) => {
       Http.post('auth/forgot-password', params)
         .then((res) => {
@@ -97,7 +97,7 @@ export function forgotPassword(params) {
           reject(err);
         })
         .finally(() => {
-          dispatch(setLoading(false));
+          dispatch(disableLoading());
         })
     })
   }
@@ -110,7 +110,7 @@ export function forgotPassword(params) {
  */
 export function me() {
   return dispatch => {
-    dispatch(setLoading(true));
+    dispatch(enableLoading());
     return new Promise((resolve, reject) => {
       Http.get('auth/me')
         .then((res) => {
@@ -121,7 +121,7 @@ export function me() {
           reject(err);
         })
         .finally(() => {
-          dispatch(setLoading(false));
+          dispatch(disableLoading());
         })
     })
   }

@@ -8,14 +8,17 @@ export const loaderSlice = createSlice({
   name: 'loader',
   initialState,
   reducers: {
-    setLoading: (state, action) => {
-      state.isLoading = action.payload;
+    enableLoading: (state) => {
+      state.isLoading = true;
+    },
+    disableLoading: (state) => {
+      state.isLoading = false;
     },
   }
 });
 
-export const {setLoading} = loaderSlice.actions;
+export const {enableLoading, disableLoading} = loaderSlice.actions;
 
-export const loaderStatus = state => state.auth.isLoading;
+export const loaderStatus = state => state.loader.isLoading;
 
 export default loaderSlice.reducer;

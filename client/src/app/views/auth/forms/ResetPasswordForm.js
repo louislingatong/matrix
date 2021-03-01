@@ -5,7 +5,6 @@ import {Form, Button, Container} from 'react-bootstrap';
 import _ from 'lodash';
 import Loader from '../../../components/loader/Loader';
 
-
 function LoginForm({handleSubmitForm, error, isLoading}) {
   const params = useParams();
   const {register, errors, handleSubmit, setError, watch, reset} = useForm();

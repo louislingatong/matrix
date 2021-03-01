@@ -1,6 +1,6 @@
 import Http from '../utils/Http';
 import {setUserList, setUserData} from '../store/userSlice';
-import {setLoading} from '../store/loaderSlice';
+import {enableLoading, disableLoading} from '../store/loaderSlice';
 
 /**
  * Fetch all users
@@ -9,7 +9,7 @@ import {setLoading} from '../store/loaderSlice';
  */
 export function fetchAllUsers() {
   return dispatch => {
-    dispatch(setLoading(true));
+    dispatch(enableLoading());
     return new Promise((resolve, reject) => {
       Http.get('users')
         .then(res => {
@@ -21,7 +21,7 @@ export function fetchAllUsers() {
           reject(err);
         })
         .finally(() => {
-          dispatch(setLoading(false));
+          dispatch(disableLoading());
         })
     })
   }
@@ -35,7 +35,7 @@ export function fetchAllUsers() {
  */
 export function fetchUser(id) {
   return dispatch => {
-    dispatch(setLoading(true));
+    dispatch(enableLoading());
     return new Promise((resolve, reject) => {
       Http.get(`users/${id}`)
         .then(res => {
@@ -47,7 +47,7 @@ export function fetchUser(id) {
           reject(err);
         })
         .finally(() => {
-          dispatch(setLoading(false));
+          dispatch(disableLoading());
         })
     })
   }
