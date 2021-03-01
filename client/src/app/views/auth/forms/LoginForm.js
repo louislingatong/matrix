@@ -30,7 +30,7 @@ function LoginForm({handleSubmitForm, error, isLoading}) {
   return (
     <Container>
       <h3>Login</h3>
-      <Form>
+      <Form onSubmit={handleSubmit(onSubmitForm)}>
         <Form.Group controlId="formUsername">
           <Form.Label>Username</Form.Label>
           <Form.Control placeholder="Enter username"
@@ -48,8 +48,6 @@ function LoginForm({handleSubmitForm, error, isLoading}) {
             </Form.Text>
           }
         </Form.Group>
-      </Form>
-      <Form>
         <Form.Group controlId="formPassword">
           <Form.Label>Password</Form.Label>
           <Form.Control type="password" placeholder="Enter password"
@@ -67,21 +65,21 @@ function LoginForm({handleSubmitForm, error, isLoading}) {
             </Form.Text>
           }
         </Form.Group>
+        <Row>
+          <Col>
+            <Button type="submit" variant="secondary" disabled={isLoading}>
+              {isLoading ? <Loader type="beat" color="light"/> : 'Login' }
+            </Button>
+          </Col>
+          <Col className="text-right">
+            <Button className="text-decoration-none" variant="link"
+                    to={{pathname: '/forgot-password', state: {from: history.location.pathname}}}
+                    as={Link}>
+              Forgot Password
+            </Button>
+          </Col>
+        </Row>
       </Form>
-      <Row>
-        <Col>
-          <Button variant="secondary" onClick={handleSubmit(onSubmitForm)} disabled={isLoading}>
-            {isLoading ? <Loader type="beat" color="light"/> : 'Login' }
-          </Button>
-        </Col>
-        <Col className="text-right">
-          <Button className="text-decoration-none" variant="link"
-                  to={{pathname: '/forgot-password', state: {from: history.location.pathname}}}
-                  as={Link}>
-            Forgot Password
-          </Button>
-        </Col>
-      </Row>
     </Container>
   );
 }

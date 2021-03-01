@@ -23,7 +23,7 @@ function ForgotPasswordForm({handleSubmitForm, error, isLoading}) {
   return (
     <Container>
       <h3>Forgot Password</h3>
-      <Form>
+      <Form onSubmit={handleSubmit(onSubmitForm)}>
         <Form.Group controlId="formEmail">
           <Form.Label>Email</Form.Label>
           <Form.Control type="email" placeholder="Enter email"
@@ -45,10 +45,10 @@ function ForgotPasswordForm({handleSubmitForm, error, isLoading}) {
             </Form.Text>
           }
         </Form.Group>
+        <Button type="submit" variant="secondary" disabled={isLoading}>
+          {isLoading ? <Loader type="beat" color="light"/> : 'Send' }
+        </Button>
       </Form>
-      <Button variant="secondary" onClick={handleSubmit(onSubmitForm)} disabled={isLoading}>
-        {isLoading ? <Loader type="beat" color="light"/> : 'Send' }
-      </Button>
     </Container>
   );
 }

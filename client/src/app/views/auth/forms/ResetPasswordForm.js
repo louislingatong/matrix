@@ -27,7 +27,7 @@ function LoginForm({handleSubmitForm, error, isLoading}) {
   return (
     <Container>
       <h3>Reset Password</h3>
-      <Form>
+      <Form onSubmit={handleSubmit(onSubmitForm)}>
         <Form.Group controlId="formToken">
           <Form.Label>Token</Form.Label>
           <Form.Control name="token"
@@ -44,8 +44,6 @@ function LoginForm({handleSubmitForm, error, isLoading}) {
             </Form.Text>
           }
         </Form.Group>
-      </Form>
-      <Form>
         <Form.Group controlId="formPassword">
           <Form.Label>New Password</Form.Label>
           <Form.Control type="password" placeholder="Enter new password"
@@ -63,8 +61,6 @@ function LoginForm({handleSubmitForm, error, isLoading}) {
             </Form.Text>
           }
         </Form.Group>
-      </Form>
-      <Form>
         <Form.Group controlId="formConfirmPassword">
           <Form.Label>Confirm Password</Form.Label>
           <Form.Control type="password" placeholder="Enter confirm password"
@@ -83,10 +79,10 @@ function LoginForm({handleSubmitForm, error, isLoading}) {
             </Form.Text>
           }
         </Form.Group>
+        <Button type="submit" variant="secondary" disabled={isLoading}>
+          {isLoading ? <Loader type="beat" color="light"/> : 'Reset' }
+        </Button>
       </Form>
-      <Button variant="secondary" onClick={handleSubmit(onSubmitForm)} disabled={isLoading}>
-        {isLoading ? <Loader type="beat" color="light"/> : 'Reset' }
-      </Button>
     </Container>
   );
 }

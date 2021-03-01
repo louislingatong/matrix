@@ -29,7 +29,7 @@ function RegisterForm({handleSubmitForm, error, isLoading}) {
   return (
     <Container>
       <h3>Register</h3>
-      <Form>
+      <Form onSubmit={handleSubmit(onSubmitForm)}>
         <Form.Group controlId="formCode">
           <Form.Label>Code</Form.Label>
           <Form.Control placeholder="Enter code"
@@ -45,8 +45,6 @@ function RegisterForm({handleSubmitForm, error, isLoading}) {
             </Form.Text>
           }
         </Form.Group>
-      </Form>
-      <Form>
         <Form.Group controlId="formEmail">
           <Form.Label>Email</Form.Label>
           <Form.Control type="email" placeholder="Enter email"
@@ -68,8 +66,6 @@ function RegisterForm({handleSubmitForm, error, isLoading}) {
             </Form.Text>
           }
         </Form.Group>
-      </Form>
-      <Form>
         <Form.Group controlId="formUsername">
           <Form.Label>Username</Form.Label>
           <Form.Control placeholder="Enter username"
@@ -87,8 +83,6 @@ function RegisterForm({handleSubmitForm, error, isLoading}) {
             </Form.Text>
           }
         </Form.Group>
-      </Form>
-      <Form>
         <Form.Group controlId="formPassword">
           <Form.Label>Password</Form.Label>
           <Form.Control type="password" placeholder="Enter password"
@@ -106,8 +100,6 @@ function RegisterForm({handleSubmitForm, error, isLoading}) {
             </Form.Text>
           }
         </Form.Group>
-      </Form>
-      <Form>
         <Form.Group controlId="formConfirmPassword">
           <Form.Label>Confirm Password</Form.Label>
           <Form.Control type="password" placeholder="Enter confirm password"
@@ -126,8 +118,6 @@ function RegisterForm({handleSubmitForm, error, isLoading}) {
             </Form.Text>
           }
         </Form.Group>
-      </Form>
-      <Form>
         <Form.Group controlId="formFirsName">
           <Form.Label>First Name</Form.Label>
           <Form.Control placeholder="Enter first name"
@@ -145,8 +135,6 @@ function RegisterForm({handleSubmitForm, error, isLoading}) {
             </Form.Text>
           }
         </Form.Group>
-      </Form>
-      <Form>
         <Form.Group controlId="formLastName">
           <Form.Label>Last Name</Form.Label>
           <Form.Control placeholder="Enter last name"
@@ -164,10 +152,10 @@ function RegisterForm({handleSubmitForm, error, isLoading}) {
             </Form.Text>
           }
         </Form.Group>
+        <Button type="submit" variant="secondary" disabled={isLoading}>
+          {isLoading ? <Loader type="beat" color="light"/> : 'Register' }
+        </Button>
       </Form>
-      <Button variant="secondary" onClick={handleSubmit(onSubmitForm)} disabled={isLoading}>
-        {isLoading ? <Loader type="beat" color="light"/> : 'Register' }
-      </Button>
     </Container>
   );
 }
